@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <AppNavbar />
-      <main className="container py-4">
+      <main className={user ? "container dashboard-content" : "auth-page"}>
         <Routes>
           <Route path="/" element={<Navigate to={user ? "/quizzes" : "/login"} replace />} />
           <Route path="/login" element={<LoginPage />} />

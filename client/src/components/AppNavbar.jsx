@@ -12,43 +12,46 @@ function AppNavbar() {
     navigate("/login");
   };
 
+  if (!user) {
+    return null;
+  }
+
+  const homePath = user.admin ? "/admin" : "/quizzes";
+
   return (
-    <nav className="navbar navbar-expand-lg bg-white border-bottom">
-      <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
-          Assignment 4 Quiz
+    <header className="container dashboard-header">
+      <div className="dashboard-title-row">
+        <Link className="dashboard-title" to={homePath}>
+          {user.admin ? "Admin Dashboard" : "Dashboard"}
         </Link>
-        <div className="d-flex align-items-center gap-3 ms-auto">
-          {user ? (
-            <>
-              <NavLink className="nav-link" to="/quizzes">
-                Quizzes
-              </NavLink>
-              {user.admin && (
-                <NavLink className="nav-link" to="/admin">
-                  Admin
-                </NavLink>
-              )}
-              <span className="small text-secondary">
-                {user.username} ({user.admin ? "admin" : "user"})
-              </span>
-              <button className="btn btn-outline-danger btn-sm" type="button" onClick={handleLogout}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <NavLink className="nav-link" to="/login">
-                Login
-              </NavLink>
-              <NavLink className="btn btn-primary btn-sm" to="/signup">
-                Sign up
-              </NavLink>
-            </>
-          )}
-        </div>
+        <span className="dashboard-welcome">Welcome, {user.username}</span>
       </div>
-    </nav>
+      <nav className="dashboard-menu" aria-label="Dashboard navigation">
+        <NavLink className="dashboard-menu-link" to={homePath}>
+          Home
+        </NavLink>
+        {user.admin ? (
+          <>
+            <a className="dashboard-menu-link" href="#questions">
+              Manage Questions
+            </a>
+            <a className="dashboard-menu-link" href="#quizzes">
+              Manage Quizzes
+            </a>
+          </>
+        ) : (
+          <>
+            <NavLink className="dashboard-menu-link" to="/quizzes">
+              Quiz
+            </NavLink>
+            <span className="dashboard-menu-link muted">Article</span>
+          </>
+        )}
+        <button className="dashboard-menu-link logout-link" type="button" onClick={handleLogout}>
+          Logout
+        </button>
+      </nav>
+    </header>
   );
 }
 

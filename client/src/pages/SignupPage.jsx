@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../store/authSlice.js";
 
@@ -27,10 +27,10 @@ function SignupPage() {
   };
 
   return (
-    <section className="auth-panel mx-auto">
-      <h1 className="h3 mb-3">Sign up</h1>
+    <section className="auth-panel">
+      <h1 className="auth-title">Register</h1>
       {error && <div className="alert alert-danger">{error}</div>}
-      <form className="vstack gap-3" onSubmit={handleSubmit}>
+      <form className="vstack gap-4" onSubmit={handleSubmit}>
         <div>
           <label className="form-label" htmlFor="signup-username">
             Username
@@ -67,6 +67,9 @@ function SignupPage() {
           {status === "loading" ? "Creating..." : "Create account"}
         </button>
       </form>
+      <p className="auth-link-row mb-0">
+        Already have an account? <Link to="/login">Login here</Link>
+      </p>
     </section>
   );
 }

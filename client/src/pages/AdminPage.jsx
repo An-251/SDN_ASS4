@@ -188,33 +188,42 @@ function AdminPage() {
   };
 
   return (
-    <section>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h1 className="h2 mb-1">Admin CRUD</h1>
-          <p className="text-secondary mb-0">Admins can manage questions and quizzes. Normal users can only take quizzes.</p>
-        </div>
-        <button className="btn btn-outline-primary" type="button" onClick={loadData} disabled={loading}>
+    <section className="admin-dashboard">
+      <div className="admin-status-row">
+        {loading && <span className="text-secondary">Loading...</span>}
+        <button className="btn btn-outline-primary btn-sm" type="button" onClick={loadData} disabled={loading}>
           Refresh
         </button>
       </div>
       {message && <div className="alert alert-success">{message}</div>}
       {error && <div className="alert alert-danger">{error}</div>}
 
-      <div className="row g-4">
-        <div className="col-lg-5">
-          <div className="admin-panel">
-            <h2 className="h4">{questionForm.id ? "Edit Question" : "Create Question"}</h2>
-            <form className="vstack gap-3" onSubmit={submitQuestion}>
-              <textarea className="form-control" rows="2" placeholder="Question text" value={questionForm.text} onChange={(event) => setQuestionForm({ ...questionForm, text: event.target.value })} required />
-              <div className="vstack gap-2">
-                <label className="form-label mb-0">Options</label>
+      <section className="admin-section" id="questions">
+        <h1 className="section-heading">Questions</h1>
+        <div className="assignment-card admin-form-card">
+          <form onSubmit={submitQuestion}>
+            <div className="row g-3 align-items-start mb-3">
+              <label className="col-md-2 col-form-label" htmlFor="questionText">
+                Question Text:
+              </label>
+              <div className="col-md-10">
+                <textarea
+                  className="form-control"
+                  id="questionText"
+                  rows="2"
+                  value={questionForm.text}
+                  onChange={(event) => setQuestionForm({ ...questionForm, text: event.target.value })}
+                  required
+                />
+              </div>
+            </div>
+            <div className="row g-3 align-items-start mb-3">
+              <label className="col-md-2 col-form-label">Options:</label>
+              <div className="col-md-10 vstack gap-2">
                 {questionForm.options.map((option, index) => (
-                  <div className="input-group" key={`question-option-${index}`}>
-                    <span className="input-group-text">Option {index + 1}</span>
+                  <div className="d-flex gap-2" key={`question-option-${index}`}>
                     <input
                       className="form-control"
-                      placeholder={`Answer option ${index + 1}`}
                       value={option}
                       onChange={(event) => updateQuestionOption(index, event.target.value)}
                       required={index < 2}
@@ -230,49 +239,107 @@ function AdminPage() {
                   Add option
                 </button>
               </div>
-              <input className="form-control" placeholder="Keywords, comma separated" value={questionForm.keywordsText} onChange={(event) => setQuestionForm({ ...questionForm, keywordsText: event.target.value })} />
-              <div>
-                <label className="form-label" htmlFor="correctAnswerIndex">Correct Answer Index</label>
-                <input id="correctAnswerIndex" className="form-control" type="number" min="0" max={Math.max(questionForm.options.length - 1, 0)} value={questionForm.correctAnswerIndex} onChange={(event) => setQuestionForm({ ...questionForm, correctAnswerIndex: event.target.value })} required />
-              </div>
-              <div className="d-flex gap-2">
-                <button className="btn btn-primary" type="submit">{questionForm.id ? "Update question" : "Create question"}</button>
-                {questionForm.id && <button className="btn btn-outline-secondary" type="button" onClick={() => setQuestionForm(emptyQuestion)}>Cancel</button>}
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col-lg-7">
-          <div className="admin-panel">
-            <h2 className="h4">Questions</h2>
-            <div className="table-responsive">
-              <table className="table align-middle">
-                <tbody>
-                  {questions.map((question) => (
-                    <tr key={question._id}>
-                      <td>{question.text}</td>
-                      <td>{question.options.length} options</td>
-                      <td className="text-end">
-                        <button className="btn btn-sm btn-outline-primary me-2" type="button" onClick={() => editQuestion(question)}>Edit</button>
-                        <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => deleteQuestion(question._id)}>Delete</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
-          </div>
+            <div className="row g-3 align-items-center mb-3">
+              <label className="col-md-2 col-form-label" htmlFor="questionKeywords">
+                Keywords:
+              </label>
+              <div className="col-md-10">
+                <input
+                  className="form-control"
+                  id="questionKeywords"
+                  value={questionForm.keywordsText}
+                  onChange={(event) => setQuestionForm({ ...questionForm, keywordsText: event.target.value })}
+                />
+              </div>
+            </div>
+            <div className="row g-3 align-items-center mb-4">
+              <label className="col-md-2 col-form-label" htmlFor="correctAnswerIndex">
+                Correct Answer Index:
+              </label>
+              <div className="col-md-10">
+                <input
+                  id="correctAnswerIndex"
+                  className="form-control"
+                  type="number"
+                  min="0"
+                  max={Math.max(questionForm.options.length - 1, 0)}
+                  value={questionForm.correctAnswerIndex}
+                  onChange={(event) => setQuestionForm({ ...questionForm, correctAnswerIndex: event.target.value })}
+                  required
+                />
+              </div>
+            </div>
+            <div className="d-grid gap-2">
+              <button className="btn btn-primary" type="submit">
+                {questionForm.id ? "Update Question" : "Add Question"}
+              </button>
+              {questionForm.id && (
+                <button className="btn btn-outline-secondary" type="button" onClick={() => setQuestionForm(emptyQuestion)}>
+                  Cancel
+                </button>
+              )}
+            </div>
+          </form>
         </div>
-      </div>
 
-      <div className="row g-4 mt-1">
-        <div className="col-lg-5">
-          <div className="admin-panel">
-            <h2 className="h4">{quizForm.id ? "Edit Quiz" : "Create Quiz"}</h2>
-            <form className="vstack gap-3" onSubmit={submitQuiz}>
-              <input className="form-control" placeholder="Quiz title" value={quizForm.title} onChange={(event) => setQuizForm({ ...quizForm, title: event.target.value })} required />
-              <textarea className="form-control" rows="2" placeholder="Description" value={quizForm.description} onChange={(event) => setQuizForm({ ...quizForm, description: event.target.value })} />
-              <div className="question-picker border rounded p-2">
+        <div className="assignment-record-list">
+          {questions.map((question) => (
+            <article className="assignment-record" key={question._id}>
+              <h2>{question.text}</h2>
+              <ul>
+                {question.options.map((option, index) => (
+                  <li key={`${question._id}-${index}`}>{option}</li>
+                ))}
+              </ul>
+              <div className="record-actions">
+                <button className="btn btn-warning" type="button" onClick={() => editQuestion(question)}>
+                  Edit
+                </button>
+                <button className="btn btn-danger" type="button" onClick={() => deleteQuestion(question._id)}>
+                  Delete
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="admin-section" id="quizzes">
+        <h1 className="section-heading">Quizzes</h1>
+        <div className="assignment-card admin-form-card">
+          <form onSubmit={submitQuiz}>
+            <div className="row g-3 align-items-center mb-3">
+              <label className="col-md-2 col-form-label" htmlFor="quizTitle">
+                Quiz Title:
+              </label>
+              <div className="col-md-10">
+                <input
+                  className="form-control"
+                  id="quizTitle"
+                  value={quizForm.title}
+                  onChange={(event) => setQuizForm({ ...quizForm, title: event.target.value })}
+                  required
+                />
+              </div>
+            </div>
+            <div className="row g-3 align-items-start mb-3">
+              <label className="col-md-2 col-form-label" htmlFor="quizDescription">
+                Description:
+              </label>
+              <div className="col-md-10">
+                <textarea
+                  className="form-control"
+                  id="quizDescription"
+                  rows="2"
+                  value={quizForm.description}
+                  onChange={(event) => setQuizForm({ ...quizForm, description: event.target.value })}
+                />
+              </div>
+            </div>
+            <div className="row g-3 align-items-start mb-4">
+              <label className="col-md-2 col-form-label">Questions:</label>
+              <div className="col-md-10 question-picker">
                 {questions.map((question) => (
                   <label className="form-check" key={question._id}>
                     <input className="form-check-input" type="checkbox" checked={quizForm.questions.includes(question._id)} onChange={() => toggleQuizQuestion(question._id)} />
@@ -280,38 +347,38 @@ function AdminPage() {
                   </label>
                 ))}
               </div>
-              <div className="d-flex gap-2">
-                <button className="btn btn-primary" type="submit">{quizForm.id ? "Update quiz" : "Create quiz"}</button>
-                {quizForm.id && <button className="btn btn-outline-secondary" type="button" onClick={() => setQuizForm(emptyQuiz)}>Cancel</button>}
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="col-lg-7">
-          <div className="admin-panel">
-            <h2 className="h4">Quizzes</h2>
-            <div className="table-responsive">
-              <table className="table align-middle">
-                <tbody>
-                  {quizzes.map((quiz) => (
-                    <tr key={quiz._id}>
-                      <td>
-                        <strong>{quiz.title}</strong>
-                        <div className="small text-secondary">{quiz.description}</div>
-                      </td>
-                      <td>{quiz.questions?.length || 0} questions</td>
-                      <td className="text-end">
-                        <button className="btn btn-sm btn-outline-primary me-2" type="button" onClick={() => editQuiz(quiz)}>Edit</button>
-                        <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => deleteQuiz(quiz._id)}>Delete</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
-          </div>
+            <div className="d-grid gap-2">
+              <button className="btn btn-primary" type="submit">
+                {quizForm.id ? "Update Quiz" : "Add Quiz"}
+              </button>
+              {quizForm.id && (
+                <button className="btn btn-outline-secondary" type="button" onClick={() => setQuizForm(emptyQuiz)}>
+                  Cancel
+                </button>
+              )}
+            </div>
+          </form>
         </div>
-      </div>
+
+        <div className="assignment-record-list">
+          {quizzes.map((quiz) => (
+            <article className="assignment-record" key={quiz._id}>
+              <h2>{quiz.title}</h2>
+              <p>{quiz.description}</p>
+              <span className="text-secondary">{quiz.questions?.length || 0} questions</span>
+              <div className="record-actions">
+                <button className="btn btn-warning" type="button" onClick={() => editQuiz(quiz)}>
+                  Edit
+                </button>
+                <button className="btn btn-danger" type="button" onClick={() => deleteQuiz(quiz._id)}>
+                  Delete
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
     </section>
   );
 }

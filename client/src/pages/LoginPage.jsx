@@ -25,11 +25,10 @@ function LoginPage() {
   };
 
   return (
-    <section className="auth-panel mx-auto">
-      <h1 className="h3 mb-2">Login</h1>
-      <p className="text-secondary">Login first, then the React app fetches quizzes with Redux.</p>
+    <section className="auth-panel">
+      <h1 className="auth-title">Login</h1>
       {error && <div className="alert alert-danger">{error}</div>}
-      <form className="vstack gap-3" onSubmit={handleSubmit}>
+      <form className="vstack gap-4" onSubmit={handleSubmit}>
         <div>
           <label className="form-label" htmlFor="username">
             Username
@@ -61,10 +60,10 @@ function LoginPage() {
           {status === "loading" ? "Logging in..." : "Login"}
         </button>
       </form>
-      <p className="small mt-3 mb-0">
-        Admin demo: <strong>admin4</strong> / <strong>123456</strong>. Need an account?{" "}
-        <Link to="/signup">Sign up</Link>.
+      <p className="auth-link-row mb-0">
+        Don't have an account? <Link to="/signup">Register here</Link>
       </p>
+      <p className="auth-demo mb-0">Demo: user4 / 123456, admin4 / 123456</p>
     </section>
   );
 }
