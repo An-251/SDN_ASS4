@@ -1,0 +1,46 @@
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">Question bank</p>
+    <h1>Questions</h1>
+    <p class="text-secondary mb-0">Create and maintain reusable questions for your quizzes.</p>
+  </div>
+  <a class="btn btn-primary" href="/questions/new">Create New Question</a>
+</div>
+
+<% if (questions.length === 0) { %>
+  <div class="empty-state">
+    <h2 class="h4">No questions yet</h2>
+    <p class="text-secondary">Create the first question to start your question bank.</p>
+    <a class="btn btn-primary" href="/questions/new">Create Question</a>
+  </div>
+<% } else { %>
+  <div class="card border-0 shadow-sm">
+    <div class="list-group list-group-flush">
+      <% questions.forEach((question) => { %>
+        <div class="list-group-item p-3">
+          <div class="d-flex flex-column flex-md-row gap-3 justify-content-between align-items-md-center">
+            <div>
+              <a class="item-title" href="/questions/<%= question._id %>"><%= question.text %></a>
+              <div class="text-secondary small mt-1">
+                <%= question.options.length %> options
+                <% if (question.keywords.length) { %>
+                  · <%= question.keywords.join(', ') %>
+                <% } %>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <a class="btn btn-sm btn-outline-primary" href="/questions/<%= question._id %>/edit">Edit</a>
+              <form
+                method="post"
+                action="/questions/<%= question._id %>?_method=DELETE"
+                onsubmit="return confirm('Delete this question? It will also be removed from every quiz.')"
+              >
+                <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+<% } %>

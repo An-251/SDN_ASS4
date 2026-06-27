@@ -1,0 +1,40 @@
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">Quiz management</p>
+    <h1>Quizzes</h1>
+    <p class="text-secondary mb-0">Group questions into focused quizzes.</p>
+  </div>
+  <a class="btn btn-primary" href="/quizzes/new">Create New Quiz</a>
+</div>
+
+<% if (quizzes.length === 0) { %>
+  <div class="empty-state">
+    <h2 class="h4">No quizzes yet</h2>
+    <p class="text-secondary">Create a quiz and add questions from the bank.</p>
+    <a class="btn btn-primary" href="/quizzes/new">Create Quiz</a>
+  </div>
+<% } else { %>
+  <div class="row g-4">
+    <% quizzes.forEach((quiz) => { %>
+      <div class="col-md-6 col-xl-4">
+        <article class="card quiz-card border-0 shadow-sm h-100">
+          <div class="card-body p-4">
+            <span class="badge text-bg-light border mb-3"><%= quiz.questions.length %> questions</span>
+            <h2 class="h4"><a href="/quizzes/<%= quiz._id %>"><%= quiz.title %></a></h2>
+            <p class="text-secondary"><%= quiz.description || 'No description provided.' %></p>
+          </div>
+          <div class="card-footer bg-white border-0 px-4 pb-4 d-flex gap-2">
+            <a class="btn btn-sm btn-outline-primary" href="/quizzes/<%= quiz._id %>/edit">Edit</a>
+            <form
+              method="post"
+              action="/quizzes/<%= quiz._id %>?_method=DELETE"
+              onsubmit="return confirm('Delete this quiz? The questions will remain in the bank.')"
+            >
+              <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+            </form>
+          </div>
+        </article>
+      </div>
+    <% }); %>
+  </div>
+<% } %>

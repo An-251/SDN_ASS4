@@ -1,0 +1,62 @@
+<a class="back-link" href="/quizzes">← Back to quizzes</a>
+<section class="detail-card card border-0 shadow-sm mt-3">
+  <div class="card-body p-4 p-md-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+      <div>
+        <p class="eyebrow">Quiz details</p>
+        <h1><%= quiz.title %></h1>
+        <p class="lead text-secondary mb-0"><%= quiz.description || 'No description provided.' %></p>
+      </div>
+      <a class="btn btn-outline-primary align-self-start" href="/quizzes/<%= quiz._id %>/edit">Edit Quiz</a>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mt-5 mb-3">
+      <h2 class="h4 mb-0">Questions</h2>
+      <span class="badge text-bg-primary"><%= quiz.questions.length %> total</span>
+    </div>
+
+    <% if (quiz.questions.length === 0) { %>
+      <p class="text-secondary">This quiz has no questions yet.</p>
+    <% } else { %>
+      <div class="list-group">
+        <% quiz.questions.forEach((question, index) => { %>
+          <div class="list-group-item p-3">
+            <div class="d-flex gap-3 justify-content-between align-items-center">
+              <div>
+                <span class="text-secondary small">Question <%= index + 1 %></span>
+                <a class="item-title d-block" href="/questions/<%= question._id %>"><%= question.text %></a>
+              </div>
+              <form
+                method="post"
+                action="/quizzes/<%= quiz._id %>/questions/<%= question._id %>?_method=DELETE"
+              >
+                <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+              </form>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+
+    <div class="mt-5">
+      <h2 class="h4">Add a Question</h2>
+      <% if (availableQuestions.length === 0) { %>
+        <div class="alert alert-light border mb-0">
+          No other questions are available.
+          <a href="/questions/new" class="alert-link">Create a new question</a>.
+        </div>
+      <% } else { %>
+        <div class="list-group">
+          <% availableQuestions.forEach((question) => { %>
+            <div class="list-group-item p-3 d-flex gap-3 justify-content-between align-items-center">
+              <span><%= question.text %></span>
+              <form method="post" action="/quizzes/<%= quiz._id %>/questions/<%= question._id %>">
+                <button class="btn btn-sm btn-primary" type="submit">Add</button>
+              </form>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>

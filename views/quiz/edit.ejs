@@ -1,0 +1,53 @@
+<div class="form-shell">
+  <a class="back-link" href="/quizzes/<%= quiz._id %>">&larr; Back to quiz</a>
+  <h1 class="mt-3">Edit Quiz</h1>
+  <p class="text-secondary">Update details or change the selected questions.</p>
+  <% if (error) { %>
+    <div class="alert alert-danger" role="alert"><%= error %></div>
+  <% } %>
+  <form
+    method="post"
+    action="/quizzes/<%= quiz._id %>?_method=PUT"
+    class="card border-0 shadow-sm p-4"
+  >
+    <div class="mb-3">
+      <label class="form-label" for="title">Title</label>
+      <input class="form-control" id="title" name="title" value="<%= form.title || '' %>" required>
+    </div>
+    <div class="mb-4">
+      <label class="form-label" for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="3"><%= form.description || '' %></textarea>
+    </div>
+    <fieldset>
+      <legend class="h5">Questions</legend>
+      <% if (questions.length === 0) { %>
+        <div class="alert alert-info">
+          No questions are available yet.
+          <a href="/questions/new" class="alert-link">Create a question first</a>.
+        </div>
+      <% } else { %>
+        <div class="question-picker border rounded-3">
+          <% questions.forEach((question) => { %>
+            <label class="question-picker-item">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="questions"
+                value="<%= question._id %>"
+                <%= selectedQuestions.map(String).includes(String(question._id)) ? 'checked' : '' %>
+              >
+              <span>
+                <strong><%= question.text %></strong>
+                <small class="d-block text-secondary"><%= question.options.length %> options</small>
+              </span>
+            </label>
+          <% }); %>
+        </div>
+      <% } %>
+    </fieldset>
+    <div class="d-flex gap-2 mt-4">
+      <button class="btn btn-primary" type="submit">Update Quiz</button>
+      <a class="btn btn-light" href="/quizzes/<%= quiz._id %>">Cancel</a>
+    </div>
+  </form>
+</div>
